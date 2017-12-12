@@ -2,6 +2,7 @@ package co.lazuly.auth.security;
 
 import co.lazuly.auth.repositories.PermissionRepository;
 import co.lazuly.auth.services.RoleService;
+import co.lazuly.auth.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * Created by boot on 7/8/17.
@@ -21,6 +23,12 @@ public class WebSecurutyConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired
     RoleService roleService;
 
+    @Autowired
+    LazulyAuthenticationProvider authProvider;
+
+    @Autowired
+    private UserService userDetailsService;
+
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -30,19 +38,14 @@ public class WebSecurutyConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     @Bean
     public UserDetailsService userDetailsServiceBean() throws Exception {
-        return super.userDetailsServiceBean();
+        return userDetailsService;
     }
 
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         roleService.loadCommondRoles();
-        /*
-        auth.inMemoryAuthentication()
-            .withUser("john").password("password1").roles("USER")
-            .and()
-            .withUser("william.woodward").password("password2").roles("USER", "ADMIN");
-            */
+        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Override

@@ -15,16 +15,15 @@ public class JwtTokenEnhancer implements TokenEnhancer {
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         Map<String, Object> additionalInfo = new HashMap<>();
-        String school =  getSchool(authentication.getName());
-
-        additionalInfo.put("school", school);
+        AuthenticatedUser user = (AuthenticatedUser) authentication.getPrincipal();
+        Long school = user.getSchool();
+        String firstName = user.getFirstName();
+        String lastName = user.getLastName();
+        additionalInfo.put("schoolId", school);
+        additionalInfo.put("firstName", firstName);
+        additionalInfo.put("lastName", lastName);
 
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
     }
-
-    private String getSchool(String userName){
-        return String.format("school %s", userName);
-    }
-
 }

@@ -1,5 +1,7 @@
 package co.lazuly.auth.model;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -8,7 +10,9 @@ import java.util.List;
  * Created by boot on 12/12/2017.
  */
 @Entity
+@Table(indexes = {@Index(name = "email_idx", columnList = "email")})
 public class User {
+    private final static BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -47,7 +51,7 @@ public class User {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.password = password;
+        this.password = passwordEncoder.encode(password);
         this.verified = false;
         this.school = school;
         this.roles = roles;
