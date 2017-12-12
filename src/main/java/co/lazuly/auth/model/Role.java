@@ -1,6 +1,7 @@
 package co.lazuly.auth.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
@@ -11,6 +12,7 @@ public class Role {
     @Id
     private final String code;
 
+    @NotNull
     private final String name;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

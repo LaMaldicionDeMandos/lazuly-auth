@@ -80,6 +80,10 @@ public class RoleService {
         roles.forEach((role) -> log.info(role.toString()));
     }
 
+    public Role getOwner() {
+        return roleRepo.findOne("owner");
+    }
+
     private Role createRole(final String code, final String name, final Permission... permissions) {
         return new Role(code, name, newHashSet(permissions));
     }
@@ -91,6 +95,5 @@ public class RoleService {
     private Permission createPermission(final String name) {
         return new Permission(name);
     }
-
 
 }

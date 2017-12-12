@@ -60,7 +60,13 @@
             <artifactId>guava</artifactId>
             <version>23.1-jre</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.javadev</groupId>
+            <artifactId>underscore-string</artifactId>
+            <version>1.24</version>
+        </dependency>
 
+        <!-- Spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

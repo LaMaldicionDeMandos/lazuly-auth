@@ -1,6 +1,7 @@
 package co.lazuly.auth.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by boot on 12/12/2017.
@@ -11,6 +12,7 @@ public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private final Long id;
+    @NotNull
     private final String name;
 
     Permission() {
