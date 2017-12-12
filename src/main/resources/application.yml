@@ -4,6 +4,17 @@ spring:
   profiles:
     active:
       default
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    testOnBorrow: true
+    validationQuery: SELECT 1
+    url: jdbc:mysql://localhost/lazuly-users
+    username: root
 app:
   signing:
     key: aidafrancoygeorgelosamo
