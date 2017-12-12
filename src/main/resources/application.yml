@@ -4,8 +4,9 @@ spring:
   profiles:
     active:
       default
-signing:
-  key: 345345fsdfsf5345
+app:
+  signing:
+    key: aidafrancoygeorgelosamo
 
 #Setting the logging levels for the service
 logging:
@@ -14,4 +15,4 @@ logging:
     org.springframework.web: WARN
     com.thoughtmechanix: DEBUG
 server:
-  contextPath:   /auth
+  contextPath: /

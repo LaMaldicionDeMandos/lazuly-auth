@@ -56,10 +56,14 @@ public class JwtOauth2Config extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-
         clients.inMemory()
-                .withClient("eye")
-                .secret("secret")
+                .withClient("lazuly-bo")
+                .secret("aidafrancoygeorgelosamolazulybo")
+                .authorizedGrantTypes("refresh_token", "password", "client_credentials")
+                .scopes("web", "mobile")
+            .and()
+                .withClient("lazuly")
+                .secret("aidafrancoygeorgelosamolazuly")
                 .authorizedGrantTypes("refresh_token", "password", "client_credentials")
                 .scopes("web", "mobile");
     }
