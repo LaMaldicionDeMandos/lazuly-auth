@@ -13,12 +13,15 @@ spring:
   datasource:
     testOnBorrow: true
     validationQuery: SELECT 1
-    url: jdbc:mysql://localhost/lazuly-users
+    url: ${DB_URI} #jdbc:mysql://localhost/lazuly-users
     username: root
 app:
+  host: ${HOST}
   signing:
-    key: aidafrancoygeorgelosamo
-
+    key: ${JWT_SECRET} #aidafrancoygeorgelosamo
+  secret: ${INTERNAL_SECRET} #aidafrancoygeorgelosamo
+  emails:
+    support: pasutmarcelo@gmail.com, anbenito@yahoo.com.ar
 #Setting the logging levels for the service
 logging:
   level:
@@ -26,4 +29,4 @@ logging:
     org.springframework.web: WARN
     com.thoughtmechanix: DEBUG
 server:
-  contextPath: /
+  port: 9999
