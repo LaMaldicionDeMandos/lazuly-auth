@@ -1,9 +1,6 @@
 spring:
   application:
     name: lazuly-auth
-  profiles:
-    active:
-      default
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,21 +10,48 @@ spring:
   datasource:
     testOnBorrow: true
     validationQuery: SELECT 1
-    url: ${DB_URI} #jdbc:mysql://localhost/lazuly-users
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
 app:
   host: ${HOST}
-  signing:
-    key: ${JWT_SECRET} #aidafrancoygeorgelosamo
-  secret: ${INTERNAL_SECRET} #aidafrancoygeorgelosamo
   emails:
     support: pasutmarcelo@gmail.com, anbenito@yahoo.com.ar
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: ${HOST}:8761/eureka/
 #Setting the logging levels for the service
 logging:
   level:
     com.netflix: WARN
     org.springframework.web: WARN
     com.thoughtmechanix: DEBUG
+
+---
+spring:
+  profiles: developer
+  datasource:
+    url: jdbc:mysql://localhost/lazuly-users
+    username: root
+app:
+  signing:
+    key: aidafrancoygeorgelosamo
+  secret: aidafrancoygeorgelosamo
+server:
+  port: 9999
+
+---
+spring:
+  profiles: staging
+  datasource:
+    url: ${DB_URI}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+app:
+  signing:
+    key: ${JWT_SECRET}
+  secret: ${INTERNAL_SECRET}
 server:
   port: ${PORT}
