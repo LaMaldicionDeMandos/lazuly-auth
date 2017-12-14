@@ -30,4 +30,4 @@ logging:
     org.springframework.web: WARN
     com.thoughtmechanix: DEBUG
 server:
-  port: 9999
+  port: ${PORT}

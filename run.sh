@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+export PORT=9999
 export DB_URI=jdbc:mysql://localhost/lazuly-users
 export DB_USERNAME=root
 export DB_PASSWORD=
