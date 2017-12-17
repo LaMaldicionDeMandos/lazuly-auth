@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by boot on 12/12/2017.
@@ -99,6 +100,10 @@ public class User {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public String fullName() {
+        return Objects.toString(firstName, "") + " " + Objects.toString(lastName, "").trim();
     }
 
     @Override

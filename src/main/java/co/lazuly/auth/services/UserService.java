@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -29,14 +30,21 @@ public class UserService implements UserDetailsService {
     private final UserRepository repo;
     private final EmailRestClient emailService;
     private final List<String> supportEmails;
+    private final String welcomeEmailCode;
+    private final String newSchoolEmailCode;
+
     private Role owner;
 
     @Autowired
     public UserService(final RoleService roleService, final UserRepository repo, final EmailRestClient emailService,
-                       @Value("#{'${app.emails.support}'.split(',')}") final List<String> supportEmails) {
+                       @Value("#{'${app.emails.support}'.split(',')}") final List<String> supportEmails,
+                       @Value("${app.mailjet.welcome}") final String welcomeEmailCode,
+                       @Value("${app.mailjet.new}") final String newSchoolEmailCode) {
         this.roleService = checkNotNull(roleService);
         this.repo = checkNotNull(repo);
         this.emailService = checkNotNull(emailService);
+        this.welcomeEmailCode = checkNotNull(welcomeEmailCode);
+        this.newSchoolEmailCode = checkNotNull(newSchoolEmailCode);
         this.supportEmails = supportEmails;
         this.owner = roleService.getOwner();
     }
@@ -47,17 +55,36 @@ public class UserService implements UserDetailsService {
         user = repo.save(user);
 
         //TODO hay que implementar los datos que van a ir en el email
-        sendEmails(user);
+        sendEmails(user, password);
 
         return user;
     }
 
-    private void sendEmails(final User user) {
-        EmailRestClient.Email userEmail = new EmailRestClient.Email("LALA", user.getEmail(), newHashMap());
-        EmailRestClient.Email supportEmail = new EmailRestClient.Email("LOLOLO", supportEmails, newHashMap());
+    private void sendEmails(final User user, final String password) {
+        EmailRestClient.Email userEmail = new EmailRestClient.Email(welcomeEmailCode, user.getEmail(),
+                createUserPayload(user, password));
+        EmailRestClient.Email supportEmail = new EmailRestClient.Email(newSchoolEmailCode, supportEmails,
+                createSchoolPayload(user));
 
         emailService.send(userEmail);
         emailService.send(supportEmail);
+    }
+
+    private Map<String, String> createUserPayload(final User user, final String password) {
+        Map<String, String> payload = newHashMap();
+        payload.put("full_name", user.fullName());
+        payload.put("school_domain", user.getSchool().getDomain());
+        payload.put("password", password);
+        return payload;
+    }
+
+    private Map<String, String> createSchoolPayload(final User user) {
+        Map<String, String> payload = newHashMap();
+        payload.put("username", user.getEmail());
+        payload.put("full_name", user.fullName());
+        payload.put("school_name", user.getSchool().getName());
+        payload.put("school_domain", user.getSchool().getDomain());
+        return payload;
     }
 
     private Role getOwner() {

@@ -14,6 +14,10 @@ app:
   host: ${HOST}
   emails:
     support: pasutmarcelo@gmail.com, anbenito@yahoo.com.ar
+  mailjet:
+    welcome: 275057
+    new: 275414
+
 eureka:
   instance:
     preferIpAddress: true

@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -18,8 +18,6 @@ import static java.util.Arrays.asList;
 @Component
 public class EmailRestClient {
     private final static Logger log = LoggerFactory.getLogger(EmailRestClient.class);
-    private final static String FIND_TEMPLATE = "%1$s/api/email";
-    private final static String SECRET_HEADER = "X-Authorization-Secret";
 
     public static class Email {
         private final String code;
@@ -49,28 +47,14 @@ public class EmailRestClient {
         }
     }
     @Autowired
-    RestTemplate restTemplate;
-
-    @Value("${app.host}")
-    String host;
+    EmailFeignClient client;
 
     @Value("${app.secret}")
     String secret;
 
-    //TODO Ver que objeto devuelve, se tiene que implementar al impleentar el servicio de email
-    public Object send(final Email email) {
-        /*
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(APPLICATION_JSON);
-        headers.add(SECRET_HEADER, secret);
-
-        HttpEntity<Email> entity = new HttpEntity<>(email, headers);
-
-        ResponseEntity<Object> restExchange =
-                restTemplate.exchange(format(FIND_TEMPLATE, host), POST, entity, Object.class);
-        return restExchange.getBody();
-        */
-        return null;
+    public void send(final Email email) {
+        int sended = client.send(email, secret);
+        log.info("Sended emails: {}", sended);
     }
 
 }
