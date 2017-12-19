@@ -34,7 +34,7 @@ public class UserResources {
     @RequestMapping(value = "/registration", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE)
     ResponseEntity<User> create(@RequestBody SchoolRequest req) {
         log.info("New School");
-        School school = schoolRepo.save(new School(req.getName()));
+        School school = schoolRepo.save(new School(req.getSchoolName()));
         User user = service.createOwner(req.getEmail(), req.getFirstName(), req.getLastName(), req.getPassword(), school);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
