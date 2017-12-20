@@ -26,6 +26,13 @@ eureka:
     fetchRegistry: true
     serviceUrl:
       defaultZone: ${HOST}:8761/eureka/
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000
 #Setting the logging levels for the service
 logging:
   level:
