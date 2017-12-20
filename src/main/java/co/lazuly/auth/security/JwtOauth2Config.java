@@ -2,6 +2,7 @@ package co.lazuly.auth.security;
 
 import co.lazuly.auth.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,6 +40,9 @@ public class JwtOauth2Config extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private TokenEnhancer jwtTokenEnhancer;
 
+    @Value("${app.clientkey}")
+    private String clientKey;
+
 
 
     @Override
@@ -58,13 +62,8 @@ public class JwtOauth2Config extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("lazuly-bo")
-                .secret("aidafrancoygeorgelosamolazulybo")
-                .authorizedGrantTypes("refresh_token", "password", "client_credentials")
-                .scopes("web", "mobile")
-            .and()
                 .withClient("lazuly")
-                .secret("aidafrancoygeorgelosamolazuly")
+                .secret(clientKey)
                 .authorizedGrantTypes("refresh_token", "password", "client_credentials")
                 .scopes("web", "mobile");
     }
