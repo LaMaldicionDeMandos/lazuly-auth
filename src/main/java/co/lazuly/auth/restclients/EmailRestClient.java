@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -53,6 +52,7 @@ public class EmailRestClient {
     String secret;
 
     public void send(final Email email) {
+        log.info("Send email with secret {}", secret);
         int sended = client.send(email, secret);
         log.info("Sended emails: {}", sended);
     }

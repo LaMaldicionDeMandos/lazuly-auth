@@ -54,7 +54,6 @@ public class UserService implements UserDetailsService {
         User user = new User(email, firstName, lastName, password, school, asList(getOwner()));
         user = repo.save(user);
 
-        //TODO hay que implementar los datos que van a ir en el email
         sendEmails(user, password);
 
         return user;
