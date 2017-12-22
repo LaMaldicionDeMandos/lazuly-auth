@@ -40,16 +40,19 @@ public class JwtOauth2Config extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private TokenEnhancer jwtTokenEnhancer;
 
-    @Value("${app.clientkey}")
+    @Value("${app.security.clientkey}")
     private String clientKey;
 
+    @Value("${app.security.expiration}")
+    private int expiration;
 
+    @Value("${app.security.refreshExpiration}")
+    private int refreshExpiration;
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         tokenEnhancerChain.setTokenEnhancers(Arrays.asList(jwtTokenEnhancer, jwtAccessTokenConverter));
-
         endpoints.tokenStore(tokenStore)                             //JWT
                 .accessTokenConverter(jwtAccessTokenConverter)       //JWT
                 .tokenEnhancer(tokenEnhancerChain)                   //JWT
@@ -65,6 +68,8 @@ public class JwtOauth2Config extends AuthorizationServerConfigurerAdapter {
                 .withClient("lazuly")
                 .secret(clientKey)
                 .authorizedGrantTypes("refresh_token", "password", "client_credentials")
-                .scopes("web", "mobile");
+                .scopes("web", "mobile")
+                .accessTokenValiditySeconds(expiration)
+                .refreshTokenValiditySeconds(refreshExpiration);
     }
 }

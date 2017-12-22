@@ -20,6 +20,7 @@ import java.util.Objects;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Maps.newHashMap;
 import static java.util.Arrays.asList;
+import static java.util.Objects.isNull;
 
 /**
  * Created by boot on 12/12/2017.
@@ -87,7 +88,7 @@ public class UserService implements UserDetailsService {
     }
 
     private Role getOwner() {
-        if (Objects.isNull(owner)) {
+        if (isNull(owner)) {
             owner = roleService.getOwner();
         }
         return owner;
@@ -96,10 +97,20 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = repo.findByEmail(username);
-        if (Objects.isNull(user)) {
-            throw new UsernameNotFoundException(username);
-        }
+        if (isNull(user)) throw new UsernameNotFoundException(username);
         AuthenticatedUser authenticatedUser = new AuthenticatedUser(user);
         return authenticatedUser;
+    }
+
+    User findUser(final String email) {
+        User user = repo.findByEmail(email);
+        if (isNull(user)) throw new UsernameNotFoundException(email);
+        return user;
+    }
+
+    public User changePassword(final String email, final String newPassword) {
+        User user = findUser(email);
+        user.newPassword(newPassword);
+        return repo.save(user);
     }
 }

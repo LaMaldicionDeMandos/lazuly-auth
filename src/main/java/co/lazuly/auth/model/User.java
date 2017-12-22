@@ -58,6 +58,11 @@ public class User {
         this.roles = roles;
     }
 
+    public String newPassword(final String newPassword) {
+        setPassword(passwordEncoder.encode(newPassword));
+        return getPassword();
+    }
+
     public Long getId() {
         return id;
     }
@@ -78,7 +83,7 @@ public class User {
         return password;
     }
 
-    public void setPassword(String password) {
+    void setPassword(String password) {
         this.password = password;
     }
 

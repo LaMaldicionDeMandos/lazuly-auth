@@ -11,7 +11,10 @@ spring:
     testOnBorrow: true
     validationQuery: SELECT 1
 app:
-  clientkey: ${CLIENT_KEY}
+  security:
+    clientkey: ${CLIENT_KEY}
+    expiration: 86400
+    refreshExpiration: 2592000
   host: ${HOST}
   emails:
     support: pasutmarcelo@gmail.com, anbenito@yahoo.com.ar
@@ -52,7 +55,7 @@ app:
     key: aidafrancoygeorgelosamo
   secret: aidafrancoygeorgelosamo
 server:
-  port: 9999
+  port: 8080
 
 ---
 spring:

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -37,5 +38,19 @@ public class UserResources {
         School school = schoolRepo.save(new School(req.getSchoolName()));
         User user = service.createOwner(req.getEmail(), req.getFirstName(), req.getLastName(), req.getPassword(), school);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    }
+
+    @RequestMapping(value = "/{email}", method = RequestMethod.PATCH, consumes = APPLICATION_JSON_VALUE)
+    ResponseEntity<Void> changePassword(@RequestBody final Map<String, Object> body, @PathVariable final String email) {
+        log.info("Change password -> email: {}, password: {}", email, body);
+        if (!validateOnlyPassword(body)) {
+            return ResponseEntity.badRequest().build();
+        }
+        service.changePassword(email, body.get("password").toString());
+        return ResponseEntity.ok(null);
+    }
+
+    private boolean validateOnlyPassword(final Map<String, Object> body) {
+        return body.size() == 1 && body.containsKey("password");
     }
 }
