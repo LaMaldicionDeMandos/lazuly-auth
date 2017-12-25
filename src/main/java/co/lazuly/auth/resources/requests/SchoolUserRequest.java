@@ -1,5 +1,7 @@
 package co.lazuly.auth.resources.requests;
 
+import java.util.List;
+
 /**
  * Created by boot on 25/12/2017.
  */
@@ -7,20 +9,20 @@ public class SchoolUserRequest {
     private final String firstName;
     private final String lastName;
     private final String email;
-    private final String rol;
+    private final List<String> roles;
 
     public SchoolUserRequest() {
         this.firstName = null;
         this.lastName = null;
         this.email = null;
-        this.rol = null;
+        this.roles = null;
     }
 
-    public SchoolUserRequest(String firstName, String lastName, String email, String rol) {
+    public SchoolUserRequest(String firstName, String lastName, String email, List<String> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.rol = rol;
+        this.roles = roles;
     }
 
     public String getFirstName() {
@@ -35,8 +37,8 @@ public class SchoolUserRequest {
         return email;
     }
 
-    public String getRol() {
-        return rol;
+    public List<String> getRoles() {
+        return roles;
     }
 
     @Override
@@ -49,7 +51,7 @@ public class SchoolUserRequest {
         if (firstName != null ? !firstName.equals(that.firstName) : that.firstName != null) return false;
         if (lastName != null ? !lastName.equals(that.lastName) : that.lastName != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
-        return rol != null ? rol.equals(that.rol) : that.rol == null;
+        return roles != null ? roles.equals(that.roles) : that.roles == null;
     }
 
     @Override
@@ -57,7 +59,7 @@ public class SchoolUserRequest {
         int result = firstName != null ? firstName.hashCode() : 0;
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (rol != null ? rol.hashCode() : 0);
+        result = 31 * result + (roles != null ? roles.hashCode() : 0);
         return result;
     }
 
@@ -67,7 +69,7 @@ public class SchoolUserRequest {
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", rol='" + rol + '\'' +
+                ", roles='" + roles + '\'' +
                 '}';
     }
 }

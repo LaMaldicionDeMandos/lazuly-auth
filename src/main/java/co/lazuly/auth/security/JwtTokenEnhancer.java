@@ -22,6 +22,7 @@ public class JwtTokenEnhancer implements TokenEnhancer {
         additionalInfo.put("school_id", school);
         additionalInfo.put("first_name", firstName);
         additionalInfo.put("last_name", lastName);
+        additionalInfo.put("roles", user.getRoles());
 
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;

@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by boot on 12/12/2017.
@@ -86,5 +87,9 @@ public class AuthenticatedUser implements UserDetails {
 
     public String getLastName() {
         return user.getLastName();
+    }
+
+    public List<Role> getRoles() {
+        return user.getRoles();
     }
 }
