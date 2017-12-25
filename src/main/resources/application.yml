@@ -19,8 +19,9 @@ app:
   emails:
     support: pasutmarcelo@gmail.com, anbenito@yahoo.com.ar
   mailjet:
-    welcome: 275057
+    welcome: 280786
     new: 275414
+    welcome-user: 275057
 
 eureka:
   instance:

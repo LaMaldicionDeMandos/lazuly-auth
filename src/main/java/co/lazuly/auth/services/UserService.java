@@ -6,6 +6,8 @@ import co.lazuly.auth.model.User;
 import co.lazuly.auth.repositories.UserRepository;
 import co.lazuly.auth.restclients.EmailRestClient;
 import co.lazuly.auth.security.AuthenticatedUser;
+import com.google.common.base.Strings;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +34,7 @@ public class UserService implements UserDetailsService {
     private final EmailRestClient emailService;
     private final List<String> supportEmails;
     private final String welcomeEmailCode;
+    private final String welcomeUserEmailCode;
     private final String newSchoolEmailCode;
 
     private Role owner;
@@ -40,11 +43,13 @@ public class UserService implements UserDetailsService {
     public UserService(final RoleService roleService, final UserRepository repo, final EmailRestClient emailService,
                        @Value("#{'${app.emails.support}'.split(',')}") final List<String> supportEmails,
                        @Value("${app.mailjet.welcome}") final String welcomeEmailCode,
-                       @Value("${app.mailjet.new}") final String newSchoolEmailCode) {
+                       @Value("${app.mailjet.new}") final String newSchoolEmailCode,
+                       @Value("${app.mailjet.welcome-user}") final String welcomeUserEmailCode) {
         this.roleService = checkNotNull(roleService);
         this.repo = checkNotNull(repo);
         this.emailService = checkNotNull(emailService);
         this.welcomeEmailCode = checkNotNull(welcomeEmailCode);
+        this.welcomeUserEmailCode = checkNotNull(welcomeUserEmailCode);
         this.newSchoolEmailCode = checkNotNull(newSchoolEmailCode);
         this.supportEmails = supportEmails;
         this.owner = roleService.getOwner();
@@ -62,10 +67,14 @@ public class UserService implements UserDetailsService {
 
     public User createUser(final String email, final String firstName, final String lastName, final String role,
                            final School school) {
-        User user = new User(email, firstName, lastName, "PASSWORD", school, asList(getRole(role)));
-        //user = repo.save(user);
+        final String password = RandomStringUtils.randomAlphanumeric(8);
+        User user = new User(email, firstName, lastName, password, school, asList(getRole(role)));
+        user = repo.save(user);
 
-        //sendEmails(user, password);
+        EmailRestClient.Email mail = new EmailRestClient.Email(welcomeUserEmailCode, email,
+                createUserPayload(user, password));
+
+        emailService.send(mail);
 
         return user;
     }
