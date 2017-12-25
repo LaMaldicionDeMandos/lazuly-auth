@@ -13,6 +13,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+
+import static com.google.common.collect.Iterables.any;
 
 /**
  * Created by boot on 14/12/2017.
@@ -23,8 +26,19 @@ public class SecretFilter extends GenericFilterBean {
 
     private final String secret;
 
+    private final Iterable<ShouldDoFilter> filters;
+
+    private interface ShouldDoFilter {
+        boolean should(final String path, final String method);
+    }
+
     public SecretFilter(final String secret) {
         this.secret = secret;
+        filters = Arrays.asList(
+                (String path, String method) -> path.startsWith("/users") && HttpMethod.PATCH.matches(method),
+                (String path, String method) -> path.startsWith("/users/") &&
+                        !path.contains("registration") &&
+                        HttpMethod.POST.matches(method));
     }
 
     @Override
@@ -32,8 +46,9 @@ public class SecretFilter extends GenericFilterBean {
         RequestWrapper request = new RequestWrapper((HttpServletRequest) req);
         HttpServletResponse response = (HttpServletResponse) res;
 
-        if (shouldDoFilter(request)) {
-            doFilter(request);
+        if (shouldDoFilter(request) && doFilter(request)) {
+            ((HttpServletResponse) res).sendError(403, "Forbidden");
+            return;
         }
 
         chain.doFilter(request, response);
@@ -41,16 +56,16 @@ public class SecretFilter extends GenericFilterBean {
 
     private boolean shouldDoFilter(final RequestWrapper request) {
         final String path = request.getServletPath();
-        return path.startsWith("/users") && HttpMethod.PATCH.matches(request.getMethod());
+        final String method = request.getMethod();
+        return any(filters, (ShouldDoFilter filter) -> filter.should(path, method));
     }
 
-    private void doFilter(final RequestWrapper request) throws AuthenticationException {
+    private boolean doFilter(final RequestWrapper request) throws AuthenticationException {
         String header = request.getHeader(SECRET_HEADER);
         log.info("Secret header: {}", header);
         log.info("Secret local: {}", secret);
-        if (!secret.equals(header)) {
-            throw new AuthenticationException("Invalid secret.");
-        }
+        return !secret.equals(header);
+
     }
 
 }

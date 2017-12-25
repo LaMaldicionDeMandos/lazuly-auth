@@ -84,6 +84,10 @@ public class RoleService {
         return roleRepo.findOne("owner");
     }
 
+    public Role getRole(final String role) {
+        return roleRepo.findOne(role);
+    }
+
     private Role createRole(final String code, final String name, final Permission... permissions) {
         return new Role(code, name, newHashSet(permissions));
     }

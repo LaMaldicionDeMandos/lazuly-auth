@@ -29,6 +29,11 @@ public class AuthenticatedUser implements UserDetails {
     private final User user;
     private final Collection<Authority> authorities;
 
+    public AuthenticatedUser() {
+        user = null;
+        authorities = null;
+    }
+
     public AuthenticatedUser(final User user) {
         this.user = user;
         authorities = Lists.transform(user.getRoles(), (role) -> new Authority(role));

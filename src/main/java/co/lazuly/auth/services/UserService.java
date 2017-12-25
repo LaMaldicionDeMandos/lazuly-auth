@@ -60,6 +60,16 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    public User createUser(final String email, final String firstName, final String lastName, final String role,
+                           final School school) {
+        User user = new User(email, firstName, lastName, "PASSWORD", school, asList(getRole(role)));
+        //user = repo.save(user);
+
+        //sendEmails(user, password);
+
+        return user;
+    }
+
     private void sendEmails(final User user, final String password) {
         EmailRestClient.Email userEmail = new EmailRestClient.Email(welcomeEmailCode, user.getEmail(),
                 createUserPayload(user, password));
@@ -92,6 +102,10 @@ public class UserService implements UserDetailsService {
             owner = roleService.getOwner();
         }
         return owner;
+    }
+
+    private Role getRole(final String role) {
+        return roleService.getRole(role);
     }
 
     @Override
