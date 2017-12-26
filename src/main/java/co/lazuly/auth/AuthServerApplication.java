@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.Lists;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
@@ -30,6 +31,7 @@ import java.util.List;
 import static org.springframework.http.MediaType.ALL;
 
 @SpringBootApplication
+@EnableAutoConfiguration
 @EnableResourceServer
 @EnableAuthorizationServer
 @EnableEurekaClient

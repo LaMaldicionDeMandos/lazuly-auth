@@ -3,11 +3,10 @@ package co.lazuly.auth.services;
 import co.lazuly.auth.model.Role;
 import co.lazuly.auth.model.School;
 import co.lazuly.auth.model.User;
+import co.lazuly.auth.repositories.SchoolRepository;
 import co.lazuly.auth.repositories.UserRepository;
 import co.lazuly.auth.restclients.EmailRestClient;
 import co.lazuly.auth.security.AuthenticatedUser;
-import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Maps.newHashMap;
@@ -40,15 +38,18 @@ public class UserService implements UserDetailsService {
     private final String newSchoolEmailCode;
 
     private Role owner;
+    private SchoolRepository schoolRepo;
 
     @Autowired
     public UserService(final RoleService roleService, final UserRepository repo, final EmailRestClient emailService,
+                       final SchoolRepository schoolRepo,
                        @Value("#{'${app.emails.support}'.split(',')}") final List<String> supportEmails,
                        @Value("${app.mailjet.welcome}") final String welcomeEmailCode,
                        @Value("${app.mailjet.new}") final String newSchoolEmailCode,
                        @Value("${app.mailjet.welcome-user}") final String welcomeUserEmailCode) {
         this.roleService = checkNotNull(roleService);
         this.repo = checkNotNull(repo);
+        this.schoolRepo = schoolRepo;
         this.emailService = checkNotNull(emailService);
         this.welcomeEmailCode = checkNotNull(welcomeEmailCode);
         this.welcomeUserEmailCode = checkNotNull(welcomeUserEmailCode);

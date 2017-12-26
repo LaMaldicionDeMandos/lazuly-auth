@@ -30,7 +30,7 @@ public class User {
     private boolean verified;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private final School school;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)

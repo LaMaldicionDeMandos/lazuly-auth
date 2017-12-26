@@ -6,6 +6,7 @@ import co.lazuly.auth.repositories.SchoolRepository;
 import co.lazuly.auth.resources.requests.SchoolRequest;
 import co.lazuly.auth.resources.requests.SchoolUserRequest;
 import co.lazuly.auth.services.UserService;
+import co.lazuly.auth.streaming.NewOwnerStreamSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,17 @@ public class UserResources {
     @Autowired
     UserService service;
 
+    @Autowired
+    NewOwnerStreamSender sender;
+
     @RequestMapping(value = "/registration", method = RequestMethod.POST, consumes = APPLICATION_JSON_VALUE)
     ResponseEntity<User> create(@RequestBody SchoolRequest req) {
         log.info("New School");
         School school = schoolRepo.save(new School(req.getSchoolName()));
         User user = service.createOwner(req.getEmail(), req.getFirstName(), req.getLastName(), req.getPassword(), school);
+
+        sender.send(user);
+
         return ResponseEntity.status(CREATED).body(user);
     }
 
