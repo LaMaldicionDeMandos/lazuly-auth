@@ -5,17 +5,13 @@ import co.lazuly.auth.model.User;
 import co.lazuly.auth.repositories.SchoolRepository;
 import co.lazuly.auth.resources.requests.SchoolRequest;
 import co.lazuly.auth.resources.requests.SchoolUserRequest;
-import co.lazuly.auth.security.AuthenticatedUser;
 import co.lazuly.auth.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -50,7 +46,7 @@ public class UserResources {
         try {
             School school = schoolRepo.findOne(schoolId);
             return ResponseEntity.status(CREATED).body(service.createUser(req.getEmail(), req.getFirstName(), req.getLastName(),
-                    req.getRol(), school));
+                    req.getRoles(), school));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

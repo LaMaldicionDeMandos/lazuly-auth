@@ -1,7 +1,6 @@
 package co.lazuly.auth.security;
 
 import co.lazuly.auth.filters.SecretFilter;
-import co.lazuly.auth.repositories.PermissionRepository;
 import co.lazuly.auth.services.RoleService;
 import co.lazuly.auth.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

@@ -7,6 +7,8 @@ import co.lazuly.auth.repositories.UserRepository;
 import co.lazuly.auth.restclients.EmailRestClient;
 import co.lazuly.auth.security.AuthenticatedUser;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,10 +67,10 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public User createUser(final String email, final String firstName, final String lastName, final String role,
+    public User createUser(final String email, final String firstName, final String lastName, final List<String> roles,
                            final School school) {
         final String password = RandomStringUtils.randomAlphanumeric(8);
-        User user = new User(email, firstName, lastName, password, school, asList(getRole(role)));
+        User user = new User(email, firstName, lastName, password, school, Lists.transform(roles, (code) -> getRole(code)));
         user = repo.save(user);
 
         EmailRestClient.Email mail = new EmailRestClient.Email(welcomeUserEmailCode, email,

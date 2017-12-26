@@ -38,7 +38,8 @@ public class SecretFilter extends GenericFilterBean {
                 (String path, String method) -> path.startsWith("/users") && HttpMethod.PATCH.matches(method),
                 (String path, String method) -> path.startsWith("/users/") &&
                         !path.contains("registration") &&
-                        HttpMethod.POST.matches(method));
+                        HttpMethod.POST.matches(method),
+                (String path, String method) -> path.startsWith("/roles") && HttpMethod.GET.matches(method));
     }
 
     @Override
