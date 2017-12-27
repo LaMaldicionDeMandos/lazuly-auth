@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.cloud.stream.messaging.Sink;
 
 import static java.util.Objects.isNull;
 
@@ -16,7 +15,7 @@ import static java.util.Objects.isNull;
  * Created by boot on 26/12/2017.
  */
 @EnableBinding(UsersChannels.class)
-public class NewUserStream {
+public class UsersStream {
 
     @Autowired
     SchoolRepository schoolRepo;
@@ -24,7 +23,8 @@ public class NewUserStream {
     @Autowired
     UserService service;
 
-    private final Logger logger = LoggerFactory.getLogger(NewUserStream.class);
+    private final Logger logger = LoggerFactory.getLogger(UsersStream.class);
+
     @StreamListener(UsersChannels.NEW_USER_INPUT)
     public void newUser(final NewUser req) {
         logger.info("Receiving new user {}.", req);
@@ -35,6 +35,16 @@ public class NewUserStream {
             service.createUser(req.getEmail(), req.getFirstName(), req.getLastName(), req.getRoles(), school);
         } catch (Exception e) {
             logger.info("Error saving new user from stream");
+        }
+    }
+
+    @StreamListener(UsersChannels.DELETE_USER_INPUT)
+    public void deleteUser(final String email) {
+        logger.info("Receiving delete user {}.", email);
+        try {
+            service.delete(email);
+        } catch (Exception e) {
+            logger.info("Error deleting user from stream");
         }
     }
 

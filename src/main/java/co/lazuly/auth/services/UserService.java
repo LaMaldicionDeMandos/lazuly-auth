@@ -139,4 +139,8 @@ public class UserService implements UserDetailsService {
         user.newPassword(newPassword);
         return repo.save(user);
     }
+
+    public void delete(final String email) {
+        repo.deleteByEmail(email);
+    }
 }

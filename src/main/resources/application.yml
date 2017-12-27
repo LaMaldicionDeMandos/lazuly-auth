@@ -18,6 +18,10 @@ spring:
           destination: newUser
           content-type: application/json
           group: lazuly-auth #Esto es lo que permite tener una cola por servicio
+        delete_user_input: #Es el input definido por default en Sink
+          destination: deleteUser
+          content-type: application/json
+          group: lazuly-auth #Esto es lo que permite tener una cola por servicio
         new_owner_output:
           destination: newOwner #Nombre de la cola o topic
           content-type: application/json
