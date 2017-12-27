@@ -11,10 +11,14 @@ import org.springframework.messaging.SubscribableChannel;
 public interface UsersChannels {
     String NEW_USER_INPUT = "new_user_input";
     String DELETE_USER_INPUT = "delete_user_input";
+    String CHANGE_ROLES_INPUT = "change_roles_input";
     String NEW_OWNER_OUTPUT = "new_owner_output";
 
     @Input(NEW_USER_INPUT)
     SubscribableChannel newUserInput();
+
+    @Input(CHANGE_ROLES_INPUT)
+    SubscribableChannel changeRolesInput();
 
     @Input(DELETE_USER_INPUT)
     SubscribableChannel deleteUserInput();

@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 
+import java.util.List;
+import java.util.Map;
+
 import static java.util.Objects.isNull;
 
 /**
@@ -43,6 +46,18 @@ public class UsersStream {
         logger.info("Receiving delete user {}.", email);
         try {
             service.delete(email);
+        } catch (Exception e) {
+            logger.info("Error deleting user from stream");
+        }
+    }
+
+    @StreamListener(UsersChannels.CHANGE_ROLES_INPUT)
+    public void deleteUser(final Map<String, Object> payload) {
+        logger.info("Receiving changeRoles {}.", payload);
+        try {
+            String email = payload.get("email").toString();
+            List<String> roles = (List<String>) payload.get("roles");
+            service.changeRoles(email, roles);
         } catch (Exception e) {
             logger.info("Error deleting user from stream");
         }

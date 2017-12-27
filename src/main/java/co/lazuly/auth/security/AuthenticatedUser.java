@@ -77,8 +77,8 @@ public class AuthenticatedUser implements UserDetails {
         return true;
     }
 
-    public Long getSchool() {
-        return user.getSchool().getId();
+    public School getSchool() {
+        return user.getSchool();
     }
 
     public String getFirstName() {

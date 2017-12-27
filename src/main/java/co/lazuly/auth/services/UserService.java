@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Maps.newHashMap;
@@ -128,7 +129,7 @@ public class UserService implements UserDetailsService {
         return authenticatedUser;
     }
 
-    User findUser(final String email) {
+    public User findUser(final String email) {
         User user = repo.findByEmail(email);
         if (isNull(user)) throw new UsernameNotFoundException(email);
         return user;
@@ -142,5 +143,12 @@ public class UserService implements UserDetailsService {
 
     public void delete(final String email) {
         repo.deleteByEmail(email);
+    }
+
+    public void changeRoles(String email, List<String> roleCodes) {
+        User user = repo.findByEmail(email);
+        List<Role> roles = roleCodes.stream().map((code) -> roleService.getRole(code)).collect(Collectors.toList());
+        user.setRoles(roles);
+        repo.save(user);
     }
 }

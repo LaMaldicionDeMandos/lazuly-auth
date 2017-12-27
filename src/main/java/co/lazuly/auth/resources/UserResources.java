@@ -1,5 +1,6 @@
 package co.lazuly.auth.resources;
 
+import co.lazuly.auth.model.Permission;
 import co.lazuly.auth.model.School;
 import co.lazuly.auth.model.User;
 import co.lazuly.auth.repositories.SchoolRepository;
@@ -7,6 +8,7 @@ import co.lazuly.auth.resources.requests.SchoolRequest;
 import co.lazuly.auth.resources.requests.SchoolUserRequest;
 import co.lazuly.auth.services.UserService;
 import co.lazuly.auth.streaming.NewOwnerStreamSender;
+import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.ResponseEntity.ok;
 
 /**
  * Created by boot on 12/12/2017.
@@ -66,7 +70,15 @@ public class UserResources {
             return ResponseEntity.badRequest().build();
         }
         service.changePassword(email, body.get("password").toString());
-        return ResponseEntity.ok(null);
+        return ok(null);
+    }
+
+    @RequestMapping(value = "{username}/permissions")
+    ResponseEntity<Set<Permission>> getPermissions(@PathVariable final String username) {
+        User user = service.findUser(username);
+        Set<Permission> permissions = Sets.newHashSet();
+        user.getRoles().stream().forEach((role) -> permissions.addAll(role.getPermissions()));
+        return ok(permissions);
     }
 
     private boolean validateOnlyPassword(final Map<String, Object> body) {
