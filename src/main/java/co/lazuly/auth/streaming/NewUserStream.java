@@ -15,7 +15,7 @@ import static java.util.Objects.isNull;
 /**
  * Created by boot on 26/12/2017.
  */
-@EnableBinding(Sink.class)
+@EnableBinding(UsersChannels.class)
 public class NewUserStream {
 
     @Autowired
@@ -25,7 +25,7 @@ public class NewUserStream {
     UserService service;
 
     private final Logger logger = LoggerFactory.getLogger(NewUserStream.class);
-    @StreamListener(Sink.INPUT)
+    @StreamListener(UsersChannels.NEW_USER_INPUT)
     public void newUser(final NewUser req) {
         logger.info("Receiving new user {}.", req);
         try {

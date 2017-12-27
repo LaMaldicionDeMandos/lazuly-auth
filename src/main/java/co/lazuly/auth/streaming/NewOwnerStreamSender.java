@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
@@ -17,14 +16,14 @@ import java.util.List;
  * Created by boot on 26/12/2017.
  */
 @Component
-@EnableBinding(Source.class)
+@EnableBinding(UsersChannels.class)
 public class NewOwnerStreamSender {
-    private final Source source;
+    private final UsersChannels source;
 
     private final static Logger logger = LoggerFactory.getLogger(NewOwnerStreamSender.class);
 
     @Autowired
-    public NewOwnerStreamSender(final Source source) {
+    public NewOwnerStreamSender(final UsersChannels source) {
         this.source = source;
     }
 
@@ -33,6 +32,6 @@ public class NewOwnerStreamSender {
         NewUser req = new NewUser(user.getFirstName(), user.getLastName(), user.getEmail(), roles,
                 user.getSchool().getId());
         logger.debug("Sending Kafka message {}", req);
-        source.output().send(MessageBuilder.withPayload(req).build());
+        source.newOwnerOutput().send(MessageBuilder.withPayload(req).build());
     }
 }
