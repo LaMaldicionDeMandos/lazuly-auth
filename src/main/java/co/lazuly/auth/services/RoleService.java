@@ -52,26 +52,36 @@ public class RoleService {
         Permission gradeAssignment = createPermission("grade_assignment");
         Permission roleCrud = createPermission("role_crud");
         Permission studentCrud = createPermission("student_crud");
+        Permission sendToAllTeachers = createPermission("send_notification_to_all_teachers");
+        Permission sendToAssignedTeachers = createPermission("send_notification_to_assigned_teachers");
+        Permission sendToNotAssignedTeachers = createPermission("send_notification_to_not_assigned_teachers");
+        Permission sendToDirective = createPermission("send_notification_to_directive");
+        Permission sendToOwner = createPermission("send_notification_to_owner");
 
         Set<Permission> allPermissions = newHashSet(
-                sendToStudentAssigned,
-                sendToStudentNotAssigned,
-                sendToAllStudents,
                 userCrud,
                 roleAssignment,
                 gradeCrud,
                 gradeAssignment,
                 roleCrud,
-                studentCrud);
+                studentCrud,
+                sendToAllTeachers,
+                sendToAssignedTeachers,
+                sendToNotAssignedTeachers,
+                sendToDirective,
+                sendToStudentAssigned,
+                sendToStudentNotAssigned,
+                sendToAllStudents,
+                sendToOwner);
 
         permissionRepo.save(allPermissions);
 
         Role owner = createRole("owner", "Dueño", allPermissions);
         Role director = createRole("directive", "Directivo", allPermissions);
         Role admin = createRole("admin", "Administrador", userCrud, roleAssignment, gradeCrud,
-                gradeAssignment, roleCrud, studentCrud);
-        Role teacher = createRole("teacher", "Maestro/Profesor", sendToStudentAssigned);
-        Role parent = createRole("parent", "Pariente");
+                gradeAssignment, roleCrud, studentCrud, sendToDirective, sendToStudentNotAssigned, sendToAllStudents, sendToOwner);
+        Role teacher = createRole("teacher", "Maestro/Profesor", sendToStudentAssigned, sendToDirective);
+        Role parent = createRole("parent", "Pariente", sendToAssignedTeachers, sendToDirective);
 
         roleRepo.save(asList(owner, director, admin, teacher, parent));
 
